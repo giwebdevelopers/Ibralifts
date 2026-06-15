@@ -9,6 +9,7 @@ import SessionDetail from './screens/SessionDetail'
 import Settings from './screens/Settings'
 import RestTimerHost from './components/RestTimer'
 import { ToastHost } from './components/Toast'
+import { requestPersistentStorage } from './lib/persist'
 
 export default function App() {
   const ready = useStore((s) => s.ready)
@@ -16,6 +17,8 @@ export default function App() {
 
   useEffect(() => {
     init()
+    // Ask the browser to keep our IndexedDB data durable (non-evictable).
+    requestPersistentStorage()
   }, [init])
 
   if (!ready) {
