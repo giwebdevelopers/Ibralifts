@@ -1,0 +1,743 @@
+/* ---- Stepper ------------------------------------------------------------ */
+.stepper {
+  display: flex;
+  align-items: stretch;
+  background: var(--surface-sunken);
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  overflow: hidden;
+  transition: border-color var(--dur) var(--ease);
+}
+
+.stepper:focus-within {
+  border-color: var(--accent);
+}
+
+.stepper button {
+  width: var(--tap);
+  min-width: var(--tap);
+  display: grid;
+  place-items: center;
+  color: var(--ink-soft);
+  font-size: 22px;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+  touch-action: manipulation;
+}
+
+.stepper button:active {
+  background: var(--line);
+  color: var(--ink);
+}
+
+.stepper button:disabled {
+  color: var(--line-strong);
+}
+
+/* Compact variant for tight two-up set rows on narrow phones. */
+.stepper.compact button {
+  width: 40px;
+  min-width: 40px;
+  font-size: 19px;
+}
+
+.stepper.compact .value input {
+  font-size: 17px;
+}
+
+.stepper .value {
+  flex: 1;
+  min-width: 0;
+}
+
+.stepper .value input {
+  width: 100%;
+  height: 100%;
+  min-height: var(--tap);
+  text-align: center;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-weight: 620;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.stepper .value input::-webkit-outer-spin-button,
+.stepper .value input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.stepper .value .unit {
+  font-size: 12px;
+  color: var(--ink-faint);
+  font-weight: 500;
+  text-align: center;
+  margin-top: -4px;
+  pointer-events: none;
+}
+
+/* ---- Set row ------------------------------------------------------------ */
+.exercise {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.exercise-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px 10px;
+}
+
+.exercise-head .name {
+  font-size: 17px;
+  font-weight: 620;
+  letter-spacing: -0.01em;
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.exercise-head .name .chevron {
+  color: var(--ink-faint);
+  flex: none;
+}
+
+.exercise-last {
+  padding: 0 16px 8px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 680;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pr);
+  background: var(--pr-weak);
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.set-grid {
+  padding: 4px 12px 10px;
+}
+
+.set-head {
+  display: grid;
+  grid-template-columns: 24px 1fr 1fr 26px;
+  gap: 6px;
+  padding: 2px 2px 8px;
+  font-size: 11px;
+  font-weight: 640;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.set-head .col-c {
+  text-align: center;
+}
+
+.set-row {
+  display: grid;
+  grid-template-columns: 24px 1fr 1fr 26px;
+  gap: 6px;
+  align-items: center;
+  padding: 5px 2px;
+}
+
+.set-row.is-pr {
+  background: var(--pr-weak);
+  border-radius: var(--radius-sm);
+}
+
+.set-num {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 640;
+  color: var(--ink-soft);
+  background: var(--surface-sunken);
+  border-radius: 7px;
+  font-variant-numeric: tabular-nums;
+}
+
+.set-row.is-pr .set-num {
+  background: color-mix(in srgb, var(--pr) 18%, transparent);
+  color: var(--pr);
+}
+
+.set-diff {
+  width: 26px;
+  display: grid;
+  place-items: center;
+}
+
+.set-block {
+  border-radius: var(--radius-sm);
+}
+
+.meta-dot {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.set-extra {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 2px 10px 30px;
+}
+
+.set-extra .field {
+  min-height: 40px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.rpe-input {
+  max-width: 92px;
+  text-align: center;
+}
+
+.set-tools {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 8px 12px;
+}
+
+.linkbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 560;
+  color: var(--accent);
+}
+
+.linkbtn.subtle {
+  color: var(--ink-soft);
+}
+
+.linkbtn:active {
+  background: var(--surface-sunken);
+}
+
+.linkbtn.danger {
+  color: var(--down);
+}
+
+/* per-set note/rpe toggle */
+.set-meta-toggle {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-faint);
+  border-radius: 8px;
+}
+.set-meta-toggle.active {
+  color: var(--accent);
+}
+
+/* ---- Session summary ---------------------------------------------------- */
+.summary {
+  display: flex;
+  gap: 10px;
+}
+
+.summary .stat {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+
+.summary .stat .k {
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-weight: 540;
+  margin-bottom: 4px;
+}
+
+.summary .stat .v {
+  font-size: 20px;
+  font-weight: 660;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+/* ---- Workout card (home) ------------------------------------------------ */
+.workout-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: left;
+  width: 100%;
+  transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.workout-card:active {
+  transform: scale(0.99);
+  border-color: var(--line-strong);
+}
+
+.workout-card .wc-main {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  background: transparent;
+  padding: 2px 0;
+  align-self: stretch;
+}
+
+.workout-card .wc-name {
+  font-size: 18px;
+  font-weight: 640;
+  letter-spacing: -0.01em;
+  margin-bottom: 3px;
+}
+
+.workout-card .wc-meta {
+  font-size: 13px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.workout-card .wc-go {
+  color: var(--ink-faint);
+  flex: none;
+}
+
+/* ---- Reorder row (workout editor) -------------------------------------- */
+.reorder-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 8px 8px 16px;
+}
+
+.reorder-row .ro-name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 540;
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.iconbtn.sm {
+  width: 40px;
+  height: 40px;
+}
+
+.iconbtn.sm:disabled {
+  color: var(--line-strong);
+}
+
+/* ---- Autocomplete ------------------------------------------------------- */
+.autocomplete {
+  position: relative;
+}
+
+.suggestions {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-pop);
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.suggestions li {
+  padding: 12px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.suggestions li.active,
+.suggestions li:active {
+  background: var(--surface-sunken);
+}
+
+.suggestions li .create-tag {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ---- Rest timer --------------------------------------------------------- */
+.rest-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(72px + var(--safe-bottom));
+  z-index: 35;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  padding: 0 18px;
+}
+
+.rest-pill {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: 999px;
+  padding: 8px 8px 8px 18px;
+  box-shadow: var(--shadow-pop);
+  animation: sheet-up 200ms var(--ease);
+}
+
+.rest-pill .rest-time {
+  font-size: 17px;
+  font-weight: 660;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+  min-width: 48px;
+}
+
+.rest-pill .rest-label {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.rest-pill button {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: var(--bg);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.rest-pill button:active {
+  background: rgba(255, 255, 255, 0.26);
+}
+
+.rest-presets {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  font-size: 14px;
+  font-weight: 560;
+  color: var(--ink);
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.chip:active,
+.chip.active {
+  background: var(--accent-weak);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---- Overload nudge ----------------------------------------------------- */
+.nudge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 12px 10px;
+  padding: 10px 12px;
+  background: var(--accent-weak);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--accent);
+}
+
+.nudge .nudge-text {
+  flex: 1;
+  color: color-mix(in srgb, var(--accent) 78%, var(--ink));
+  font-weight: 520;
+}
+
+.nudge button {
+  font-size: 13px;
+  font-weight: 660;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 999px;
+  height: 32px;
+  padding: 0 14px;
+}
+
+.nudge button:active {
+  opacity: 0.85;
+}
+
+/* ---- Chart -------------------------------------------------------------- */
+.chart-wrap {
+  width: 100%;
+}
+
+.chart-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.chart-svg .grid-line {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.chart-svg .axis-label {
+  fill: var(--ink-faint);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.chart-svg .series {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.chart-svg .dot {
+  fill: var(--surface);
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.chart-svg .dot-last {
+  fill: var(--accent);
+}
+
+.chart-area {
+  fill: var(--accent);
+  opacity: 0.07;
+}
+
+/* ---- History list ------------------------------------------------------- */
+.session-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  width: 100%;
+  text-align: left;
+}
+
+.session-row:active {
+  border-color: var(--line-strong);
+}
+
+.session-row .sr-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.session-row .sr-name {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+
+.session-row .sr-meta {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* session detail (read-only) */
+.detail-sets {
+  padding: 2px 16px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detail-set {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-top: 1px solid var(--line);
+  font-size: 15px;
+  flex-wrap: wrap;
+}
+
+.detail-set:first-child {
+  border-top: none;
+}
+
+.detail-set .ds-num {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 640;
+  color: var(--ink-soft);
+  background: var(--surface-sunken);
+  border-radius: 6px;
+  flex: none;
+}
+
+.detail-set .ds-main {
+  font-weight: 560;
+}
+
+.detail-set .ds-rpe {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-weak);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.detail-set .ds-note {
+  font-size: 13px;
+  color: var(--ink-soft);
+  flex-basis: 100%;
+  padding-left: 32px;
+}
+
+/* settings rows */
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+}
+
+.setting-row + .setting-row {
+  border-top: 1px solid var(--line);
+}
+
+.setting-row .sr-label {
+  flex: 1;
+}
+
+.setting-row .sr-label .t {
+  font-weight: 560;
+  font-size: 15px;
+}
+
+.setting-row .sr-label .d {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+/* toggle */
+.toggle {
+  width: 50px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--line-strong);
+  position: relative;
+  transition: background var(--dur) var(--ease);
+  flex: none;
+}
+
+.toggle.on {
+  background: var(--accent);
+}
+
+.toggle .knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #fff;
+  transition: transform var(--dur) var(--ease);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.toggle.on .knob {
+  transform: translateX(20px);
+}
+
+/* small toast */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(96px + var(--safe-bottom));
+  transform: translateX(-50%);
+  z-index: 60;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 540;
+  box-shadow: var(--shadow-pop);
+  animation: sheet-up 200ms var(--ease);
+  max-width: 90vw;
+  text-align: center;
+}

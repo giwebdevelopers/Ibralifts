@@ -1,0 +1,40 @@
+:root {
+  /* Warm neutral palette — bone / off-white surfaces, soft charcoal ink. */
+  --bg: #f6f4ef;            /* bone background */
+  --surface: #fdfcf9;       /* card surface, a touch lighter than bg */
+  --surface-sunken: #f1eee7;/* inset fields / wells */
+  --ink: #2b2a26;           /* primary text — soft warm charcoal */
+  --ink-soft: #6f6b63;      /* secondary text */
+  --ink-faint: #a8a399;     /* tertiary / placeholders */
+  --line: #e7e3da;          /* hairline dividers */
+  --line-strong: #d9d4c8;   /* slightly stronger border */
+
+  /* One restrained accent + calm semantic up/down. */
+  --accent: #5c7f6b;        /* muted sage — active states, "up", PR */
+  --accent-weak: #e6ede8;   /* sage tint background */
+  --up: #5c7f6b;            /* progress up (same family as accent) */
+  --down: #b0664f;          /* muted terracotta — went down */
+  --down-weak: #f1e3dd;
+  --same: #a8a399;          /* neutral — matched */
+  --pr: #a07b3c;            /* restrained warm gold for a new PR */
+  --pr-weak: #f1ead9;
+
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-lg: 20px;
+
+  --shadow-sticky: 0 -1px 0 var(--line), 0 -8px 24px rgba(43, 42, 38, 0.04);
+  --shadow-pop: 0 8px 30px rgba(43, 42, 38, 0.12);
+
+  --tap: 48px; /* minimum comfortable tap target */
+
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur: 180ms;
+
+  --font: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    system-ui, sans-serif;
+
+  /* iOS safe-area insets */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
