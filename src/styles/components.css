@@ -122,6 +122,70 @@
   flex-wrap: wrap;
 }
 
+/* The "Last … · 3×8 @ 25kg ↑" line doubles as a toggle for the history dropdown. */
+.exercise-last.as-toggle {
+  width: 100%;
+  background: transparent;
+  text-align: left;
+  border-radius: var(--radius-sm);
+  transition: color var(--dur) var(--ease);
+}
+
+.exercise-last.as-toggle:active {
+  color: var(--ink);
+}
+
+.exercise-last .el-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.hist-caret {
+  color: var(--ink-faint);
+  flex: none;
+  transition: transform var(--dur) var(--ease);
+}
+
+.hist-caret.open {
+  transform: rotate(180deg);
+}
+
+/* Per-exercise history dropdown: when did I last do this & how much. */
+.ex-history {
+  margin: 0 16px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+
+.ex-history-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 9px 12px;
+  font-size: 13px;
+}
+
+.ex-history-row + .ex-history-row {
+  border-top: 1px solid var(--line);
+}
+
+.ex-history-row .eh-date {
+  color: var(--ink-soft);
+  white-space: nowrap;
+  font-weight: 540;
+}
+
+.ex-history-row .eh-sets {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .pr-badge {
   display: inline-flex;
   align-items: center;
@@ -134,6 +198,27 @@
   background: var(--pr-weak);
   padding: 3px 8px;
   border-radius: 999px;
+  animation: pr-pop 420ms var(--ease) both;
+}
+
+@keyframes pr-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pr-badge {
+    animation: none;
+  }
 }
 
 .set-grid {

@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import SetRow from './SetRow'
 import DiffIndicator from './DiffIndicator'
-import { Plus, Timer, ChevronRight, Trophy, ArrowDown } from './Icons'
+import { Plus, Timer, ChevronRight, ChevronDown, Trophy, ArrowDown } from './Icons'
 import {
   topSet,
   isWeightPR,
@@ -9,7 +10,7 @@ import {
   isDropSet,
   setSegments,
 } from '../lib/calc'
-import { fmtKg, fmtWeight, fmtSigned, relativeDay } from '../lib/format'
+import { fmtKg, fmtWeight, fmtSigned, fmtWeekdayDay, relativeDay } from '../lib/format'
 
 // Concise summary of a set list: "3 × 8 @ 60 kg" when uniform, else a list.
 // Drop sets render their segments with arrows, e.g. "20×8→15×6→10×4".
@@ -38,6 +39,7 @@ export default function ExerciseCard({
   sets,
   prevSets,
   prevSession,
+  history = [],
   priorBest,
   repGoal,
   onAddSet,
@@ -48,6 +50,7 @@ export default function ExerciseCard({
   onStartRest,
   onApplyNudge,
 }) {
+  const [histOpen, setHistOpen] = useState(false)
   const curTop = topSet(sets)
   const prevTop = topSet(prevSets)
   const hasPrev = prevSets && prevSets.length > 0
@@ -86,21 +89,45 @@ export default function ExerciseCard({
         <ChevronRight className="chevron" size={18} />
       </button>
 
-      <div className="exercise-last">
-        {hasPrev ? (
-          <>
-            <span>
-              Last {relativeDay(prevSession?.date)} · {summarize(prevSets)}
-            </span>
-            <DiffIndicator
-              dir={topDiff.dir}
-              label={topDiff.dir === 'same' ? 'same' : fmtSigned(topDiff.delta, ' kg')}
-            />
-          </>
-        ) : (
+      {hasPrev ? (
+        <button
+          type="button"
+          className="exercise-last as-toggle"
+          onClick={() => setHistOpen((o) => !o)}
+          aria-expanded={histOpen}
+        >
+          <span className="el-text">
+            Last {relativeDay(prevSession?.date)} · {summarize(prevSets)}
+          </span>
+          <DiffIndicator
+            dir={topDiff.dir}
+            label={topDiff.dir === 'same' ? 'same' : fmtSigned(topDiff.delta, ' kg')}
+          />
+          <ChevronDown className={`hist-caret${histOpen ? ' open' : ''}`} size={16} />
+        </button>
+      ) : (
+        <div className="exercise-last">
           <span className="faint">First time — set your baseline.</span>
-        )}
-      </div>
+        </div>
+      )}
+
+      {histOpen && history.length > 0 && (
+        <div className="ex-history stagger">
+          {history.map((h, i) => {
+            const older = history[i + 1]
+            const dir = older
+              ? compareValue(Number(h.top?.weight) || 0, Number(older.top?.weight) || 0).dir
+              : 'new'
+            return (
+              <div className="ex-history-row" key={h.session.id}>
+                <span className="eh-date">{fmtWeekdayDay(h.session.date)}</span>
+                <span className="eh-sets">{summarize(h.sets)}</span>
+                <DiffIndicator dir={dir} iconOnly />
+              </div>
+            )
+          })}
+        </div>
+      )}
 
       {showNudge && (
         <div className="nudge">

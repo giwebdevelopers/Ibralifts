@@ -54,7 +54,7 @@ export default function Home() {
       ) : (
         <>
           <div className="section-label">Workouts</div>
-          <div className="stack">
+          <div className="stack stagger">
             {sorted.map((w) => {
               const last = sessionsForWorkout(snapshot, w.id)[0]
               const meta = [

@@ -87,6 +87,23 @@ export function exerciseHistory(state, exerciseId) {
   return points.sort((a, b) => new Date(a.date) - new Date(b.date))
 }
 
+// Recent sessions that included a given exercise, newest first, each with its
+// top set. Powers the per-exercise history dropdown ("when did I last do this
+// and how much"). Looks across all workouts the exercise appears in.
+export function exerciseRecentSessions(state, exerciseId, { excludeSessionId = null, limit = 6 } = {}) {
+  const out = []
+  const sessions = state.sessions
+    .filter((s) => s.id !== excludeSessionId)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+  for (const session of sessions) {
+    const sets = entriesForExerciseInSession(state, session.id, exerciseId)
+    if (!sets.length) continue
+    out.push({ session, sets, top: topSet(sets) })
+    if (out.length >= limit) break
+  }
+  return out
+}
+
 // Distinct exercise ids that appear anywhere in history (for "have I done this").
 export function exercisesUsed(state) {
   const ids = new Set(state.setEntries.map((s) => s.exerciseId))

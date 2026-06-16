@@ -8,6 +8,7 @@ import {
   entriesForExerciseInSession,
   previousEntriesForExercise,
   lastSessionForWorkout,
+  exerciseRecentSessions,
 } from '../lib/selectors'
 import { totalVolume, compareValue, bestWeight } from '../lib/calc'
 import { fmtVolume, fmtSigned, relativeDay } from '../lib/format'
@@ -146,7 +147,7 @@ export default function Session() {
       </div>
 
       {/* Exercises */}
-      <div className="stack" style={{ marginTop: 16 }}>
+      <div className="stack stagger" style={{ marginTop: 16 }}>
         {exerciseList.map((ex) => {
           const sets = entriesForExerciseInSession(snapshot, session.id, ex.id)
           const prev = previousEntriesForExercise(snapshot, {
@@ -160,6 +161,10 @@ export default function Session() {
             snapshot.setEntries.filter((s) => s.sessionId !== session.id),
             ex.id
           )
+          const history = exerciseRecentSessions(snapshot, ex.id, {
+            excludeSessionId: session.id,
+            limit: 6,
+          })
           return (
             <ExerciseCard
               key={ex.id}
@@ -167,6 +172,7 @@ export default function Session() {
               sets={sets}
               prevSets={prev.sets}
               prevSession={prev.session}
+              history={history}
               priorBest={priorBest}
               repGoal={settings.repGoal}
               onAddSet={(eid) => addSet(session.id, eid)}

@@ -32,6 +32,18 @@ export function fmtDateShort(iso) {
   return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })
 }
 
+// "Tue 16" — used inside month-grouped lists where the month is the header.
+export function fmtWeekdayDay(iso) {
+  const d = new Date(iso)
+  return d.toLocaleDateString('en-AU', { weekday: 'short', day: 'numeric' })
+}
+
+// "June 2026" — month-group header.
+export function monthLabel(iso) {
+  const d = new Date(iso)
+  return d.toLocaleDateString('en-AU', { month: 'long', year: 'numeric' })
+}
+
 // "Today", "Yesterday", "3 days ago", or a date.
 export function relativeDay(iso) {
   const then = new Date(iso)
