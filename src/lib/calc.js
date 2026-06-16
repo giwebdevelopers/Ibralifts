@@ -7,10 +7,34 @@ export const WEIGHT_STEP = 2.5
 export const REP_STEP = 1
 export const DEFAULT_REP_GOAL = 8 // reps at which we nudge the weight up
 
+// A drop set is one set performed as several back-to-back "drops" (heavy →
+// lighter, no rest). It is stored as a normal SetEntry whose weight/reps are
+// the first/heaviest drop, plus a `drops` array of the additional drops after
+// it. So topSet / PR / comparison keep working off the main (heaviest) numbers.
+export function isDropSet(s) {
+  return Array.isArray(s?.drops) && s.drops.length > 0
+}
+
+// All weight/rep segments of a set, main first then any drops.
+export function setSegments(s) {
+  const main = { weight: Number(s?.weight) || 0, reps: Number(s?.reps) || 0 }
+  if (!isDropSet(s)) return [main]
+  return [
+    main,
+    ...s.drops.map((d) => ({ weight: Number(d.weight) || 0, reps: Number(d.reps) || 0 })),
+  ]
+}
+
+// Sensible default for a newly-added drop: ~25% lighter (snapped to the 2.5 kg
+// grid) and a couple fewer reps. Just a starting point — the user adjusts.
+export function nextDropDefault(weight, reps) {
+  const w = Math.max(0, Math.floor(((Number(weight) || 0) * 0.75) / WEIGHT_STEP) * WEIGHT_STEP)
+  const r = Math.max(1, (Number(reps) || 0) - 2)
+  return { weight: w, reps: r }
+}
+
 export function setVolume(s) {
-  const w = Number(s?.weight) || 0
-  const r = Number(s?.reps) || 0
-  return w * r
+  return setSegments(s).reduce((sum, seg) => sum + seg.weight * seg.reps, 0)
 }
 
 export function totalVolume(entries) {

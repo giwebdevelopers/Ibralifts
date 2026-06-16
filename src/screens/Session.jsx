@@ -27,6 +27,7 @@ export default function Session() {
   const settings = useStore((s) => s.settings)
 
   const addSet = useStore((s) => s.addSet)
+  const addDropSet = useStore((s) => s.addDropSet)
   const updateSet = useStore((s) => s.updateSet)
   const deleteSet = useStore((s) => s.deleteSet)
   const finishSession = useStore((s) => s.finishSession)
@@ -169,6 +170,7 @@ export default function Session() {
               priorBest={priorBest}
               repGoal={settings.repGoal}
               onAddSet={(eid) => addSet(session.id, eid)}
+              onAddDropSet={(eid) => addDropSet(session.id, eid)}
               onUpdateSet={updateSet}
               onDeleteSet={deleteSet}
               onOpenProgress={setProgressExercise}

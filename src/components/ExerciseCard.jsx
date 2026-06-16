@@ -1,22 +1,36 @@
 import SetRow from './SetRow'
 import DiffIndicator from './DiffIndicator'
-import { Plus, Timer, ChevronRight, Trophy } from './Icons'
+import { Plus, Timer, ChevronRight, Trophy, ArrowDown } from './Icons'
 import {
   topSet,
   isWeightPR,
   overloadSuggestion,
   compareValue,
+  isDropSet,
+  setSegments,
 } from '../lib/calc'
 import { fmtKg, fmtWeight, fmtSigned, relativeDay } from '../lib/format'
 
 // Concise summary of a set list: "3 × 8 @ 60 kg" when uniform, else a list.
+// Drop sets render their segments with arrows, e.g. "20×8→15×6→10×4".
 function summarize(sets) {
   if (!sets || !sets.length) return null
-  const weights = sets.map((s) => Number(s.weight) || 0)
-  const reps = sets.map((s) => Number(s.reps) || 0)
-  const uniform = weights.every((w) => w === weights[0]) && reps.every((r) => r === reps[0])
-  if (uniform) return `${sets.length} × ${reps[0]} @ ${fmtKg(weights[0])}`
-  return sets.map((s) => `${fmtWeight(s.weight)}×${s.reps}`).join('  ')
+  if (!sets.some(isDropSet)) {
+    const weights = sets.map((s) => Number(s.weight) || 0)
+    const reps = sets.map((s) => Number(s.reps) || 0)
+    const uniform = weights.every((w) => w === weights[0]) && reps.every((r) => r === reps[0])
+    if (uniform) return `${sets.length} × ${reps[0]} @ ${fmtKg(weights[0])}`
+    return sets.map((s) => `${fmtWeight(s.weight)}×${s.reps}`).join('  ')
+  }
+  return sets
+    .map((s) =>
+      isDropSet(s)
+        ? setSegments(s)
+            .map((seg) => `${fmtWeight(seg.weight)}×${seg.reps}`)
+            .join('→')
+        : `${fmtWeight(s.weight)}×${s.reps}`
+    )
+    .join('   ')
 }
 
 export default function ExerciseCard({
@@ -27,6 +41,7 @@ export default function ExerciseCard({
   priorBest,
   repGoal,
   onAddSet,
+  onAddDropSet,
   onUpdateSet,
   onDeleteSet,
   onOpenProgress,
@@ -120,6 +135,9 @@ export default function ExerciseCard({
       <div className="set-tools">
         <button type="button" className="linkbtn" onClick={() => onAddSet(exercise.id)}>
           <Plus size={18} /> Add set
+        </button>
+        <button type="button" className="linkbtn" onClick={() => onAddDropSet(exercise.id)}>
+          <ArrowDown size={18} /> Drop set
         </button>
         <button type="button" className="linkbtn subtle" onClick={onStartRest}>
           <Timer size={18} /> Rest

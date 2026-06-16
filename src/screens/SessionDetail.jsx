@@ -7,7 +7,7 @@ import {
   entriesForSession,
   entriesForExerciseInSession,
 } from '../lib/selectors'
-import { totalVolume } from '../lib/calc'
+import { totalVolume, isDropSet, setSegments } from '../lib/calc'
 import { fmtVolume, fmtDate, fmtWeight } from '../lib/format'
 import ProgressSheet from '../components/ProgressSheet'
 import { ChevronLeft, Trash, ChevronRight, Play } from '../components/Icons'
@@ -92,8 +92,13 @@ export default function SessionDetail() {
                   <div className="detail-set" key={s.id}>
                     <span className="ds-num">{s.setNumber}</span>
                     <span className="ds-main tnum">
-                      {fmtWeight(s.weight)} kg × {s.reps}
+                      {isDropSet(s)
+                        ? setSegments(s)
+                            .map((seg) => `${fmtWeight(seg.weight)}×${seg.reps}`)
+                            .join('  →  ') + ' kg'
+                        : `${fmtWeight(s.weight)} kg × ${s.reps}`}
                     </span>
+                    {isDropSet(s) && <span className="ds-drop-tag">drop</span>}
                     {s.rpe != null && <span className="ds-rpe">RPE {s.rpe}</span>}
                     {s.note ? <span className="ds-note">{s.note}</span> : null}
                   </div>

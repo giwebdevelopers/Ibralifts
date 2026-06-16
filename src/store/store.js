@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { create } from 'zustand'
 import * as db from '../db/db'
 import { uid } from '../lib/id'
-import { DEFAULT_REP_GOAL } from '../lib/calc'
+import { DEFAULT_REP_GOAL, nextDropDefault } from '../lib/calc'
 import {
   lastSessionForWorkout,
   entriesForExerciseInSession,
@@ -165,7 +165,8 @@ export const useStore = create((set, get) => ({
         currentDate: now,
       })
       if (prevSets.length) {
-        // Copy each previous set's numbers exactly; clear per-set notes/RPE.
+        // Copy each previous set's numbers exactly (including any drop set
+        // structure); clear per-set notes/RPE.
         prevSets.forEach((p, i) => {
           newEntries.push({
             id: uid(),
@@ -174,6 +175,10 @@ export const useStore = create((set, get) => ({
             setNumber: i + 1,
             weight: Number(p.weight) || 0,
             reps: Number(p.reps) || 0,
+            drops:
+              Array.isArray(p.drops) && p.drops.length
+                ? p.drops.map((d) => ({ weight: Number(d.weight) || 0, reps: Number(d.reps) || 0 }))
+                : null,
             rpe: null,
             note: '',
           })
@@ -187,6 +192,7 @@ export const useStore = create((set, get) => ({
           setNumber: 1,
           weight: DEFAULT_WEIGHT,
           reps: state.settings.repGoal || DEFAULT_REPS,
+          drops: null,
           rpe: null,
           note: '',
         })
@@ -213,10 +219,37 @@ export const useStore = create((set, get) => ({
       setNumber: existing.length + 1,
       weight: last ? Number(last.weight) || 0 : DEFAULT_WEIGHT,
       reps: last ? Number(last.reps) || 0 : get().settings.repGoal || DEFAULT_REPS,
+      drops: null,
       rpe: null,
       note: '',
     }
     // Optimistic: memory first (instant UI), persist in the background.
+    set((s) => ({ setEntries: [...s.setEntries, entry] }))
+    persist(db.put('setEntries', entry))
+    return entry
+  },
+
+  // Add a drop set: a working set (copied from the last set, like addSet) plus
+  // two pre-filled drops that step down. The user adjusts/extends from there.
+  addDropSet(sessionId, exerciseId) {
+    const snap = get().snapshot()
+    const existing = entriesForExerciseInSession(snap, sessionId, exerciseId)
+    const last = existing[existing.length - 1]
+    const baseWeight = last ? Number(last.weight) || 0 : DEFAULT_WEIGHT
+    const baseReps = last ? Number(last.reps) || 0 : get().settings.repGoal || DEFAULT_REPS
+    const d1 = nextDropDefault(baseWeight, baseReps)
+    const d2 = nextDropDefault(d1.weight, d1.reps)
+    const entry = {
+      id: uid(),
+      sessionId,
+      exerciseId,
+      setNumber: existing.length + 1,
+      weight: baseWeight,
+      reps: baseReps,
+      drops: [d1, d2],
+      rpe: null,
+      note: '',
+    }
     set((s) => ({ setEntries: [...s.setEntries, entry] }))
     persist(db.put('setEntries', entry))
     return entry

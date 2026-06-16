@@ -3,7 +3,7 @@
 // { exercises, workouts, sessions, setEntries }.
 // ---------------------------------------------------------------------------
 
-import { topSet } from './calc'
+import { topSet, setVolume } from './calc'
 
 export function exerciseById(state, id) {
   return state.exercises.find((e) => e.id === id) || null
@@ -81,7 +81,7 @@ export function exerciseHistory(state, exerciseId) {
       date: session.date,
       weight: Number(ts.weight) || 0,
       reps: Number(ts.reps) || 0,
-      volume: sets.reduce((sum, s) => sum + (Number(s.weight) || 0) * (Number(s.reps) || 0), 0),
+      volume: sets.reduce((sum, s) => sum + setVolume(s), 0),
     })
   }
   return points.sort((a, b) => new Date(a.date) - new Date(b.date))

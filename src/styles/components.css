@@ -229,16 +229,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  padding: 2px 8px 12px;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  padding: 2px 6px 12px;
 }
 
 .linkbtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   height: 40px;
-  padding: 0 10px;
+  padding: 0 8px;
   border-radius: var(--radius-sm);
   font-size: 14px;
   font-weight: 560;
@@ -268,6 +269,118 @@
 }
 .set-meta-toggle.active {
   color: var(--accent);
+}
+
+/* ---- Drop set ----------------------------------------------------------- */
+.drop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  /* No horizontal padding so drop rows align exactly under the working set's
+     steppers (the parent .set-grid already provides the inset). */
+  padding: 2px 0 8px;
+}
+
+.drop-row {
+  display: grid;
+  grid-template-columns: 24px 1fr 1fr 26px;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Drops are deliberately smaller than the working set so a drop set reads as
+   one set with nested sub-sets at a glance. */
+.drop-row .stepper button {
+  width: 32px;
+  min-width: 32px;
+}
+
+.drop-row .stepper button svg {
+  width: 16px;
+  height: 16px;
+}
+
+.drop-row .stepper .value input {
+  min-height: 34px;
+  font-size: 14px;
+}
+
+.drop-row .stepper .value .unit {
+  font-size: 10px;
+  margin-top: -3px;
+}
+
+.drop-arrow {
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  opacity: 0.55;
+}
+
+.drop-arrow svg {
+  width: 13px;
+  height: 13px;
+}
+
+.drop-remove {
+  width: 26px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-faint);
+  border-radius: 7px;
+}
+
+.drop-remove:active {
+  background: var(--surface-sunken);
+  color: var(--down);
+}
+
+.add-drop {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  height: 34px;
+  margin-left: 30px;
+  padding: 0 10px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 580;
+  color: var(--accent);
+}
+
+.add-drop:active {
+  background: var(--surface-sunken);
+}
+
+.make-drop {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  margin: 0 14px 12px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 580;
+  color: var(--accent);
+  background: var(--accent-weak);
+}
+
+.make-drop:active {
+  opacity: 0.85;
+}
+
+.ds-drop-tag {
+  font-size: 11px;
+  font-weight: 680;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-weak);
+  padding: 2px 7px;
+  border-radius: 999px;
 }
 
 /* ---- Session summary ---------------------------------------------------- */
