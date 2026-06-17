@@ -24,10 +24,14 @@ export function sessionsForWorkout(state, workoutId) {
     .sort((a, b) => new Date(b.date) - new Date(a.date))
 }
 
-// The most recent session for a workout, optionally excluding one id.
+// The most recent *finished* session for a workout, optionally excluding one
+// id. Unfinished (in-progress) sessions are not history yet, so they never
+// count as "last time" for comparisons or the Home "last done" label.
 export function lastSessionForWorkout(state, workoutId, excludeId = null) {
   return (
-    sessionsForWorkout(state, workoutId).find((s) => s.id !== excludeId) || null
+    state.sessions
+      .filter((s) => s.workoutId === workoutId && s.finishedAt && s.id !== excludeId)
+      .sort((a, b) => new Date(b.date) - new Date(a.date))[0] || null
   )
 }
 
@@ -51,7 +55,7 @@ export function previousEntriesForExercise(state, { workoutId, exerciseId, curre
   const cutoff = currentDate ? new Date(currentDate).getTime() : Infinity
 
   const earlierSessions = state.sessions
-    .filter((s) => s.id !== currentSessionId && new Date(s.date).getTime() <= cutoff)
+    .filter((s) => s.id !== currentSessionId && s.finishedAt && new Date(s.date).getTime() <= cutoff)
     .sort((a, b) => new Date(b.date) - new Date(a.date))
 
   // Pass 1: same workout.
@@ -74,6 +78,7 @@ export function previousEntriesForExercise(state, { workoutId, exerciseId, curre
 export function exerciseHistory(state, exerciseId) {
   const points = []
   for (const session of state.sessions) {
+    if (!session.finishedAt) continue
     const sets = entriesForExerciseInSession(state, session.id, exerciseId)
     if (!sets.length) continue
     const ts = topSet(sets)
@@ -93,7 +98,7 @@ export function exerciseHistory(state, exerciseId) {
 export function exerciseRecentSessions(state, exerciseId, { excludeSessionId = null, limit = 6 } = {}) {
   const out = []
   const sessions = state.sessions
-    .filter((s) => s.id !== excludeSessionId)
+    .filter((s) => s.id !== excludeSessionId && s.finishedAt)
     .sort((a, b) => new Date(b.date) - new Date(a.date))
   for (const session of sessions) {
     const sets = entriesForExerciseInSession(state, session.id, exerciseId)

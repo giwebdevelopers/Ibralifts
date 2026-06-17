@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useStore, useSnapshot } from '../store/store'
-import { sessionsForWorkout } from '../lib/selectors'
+import { lastSessionForWorkout } from '../lib/selectors'
 import { relativeDay } from '../lib/format'
 import { Settings, ChevronRight, Edit, Plus, Dumbbell } from '../components/Icons'
 
@@ -18,8 +18,8 @@ export default function Home() {
   const sorted = workouts
     .slice()
     .sort((a, b) => {
-      const la = sessionsForWorkout(snapshot, a.id)[0]
-      const lb = sessionsForWorkout(snapshot, b.id)[0]
+      const la = lastSessionForWorkout(snapshot, a.id)
+      const lb = lastSessionForWorkout(snapshot, b.id)
       const ta = la ? new Date(la.date).getTime() : 0
       const tb = lb ? new Date(lb.date).getTime() : 0
       return tb - ta || a.name.localeCompare(b.name)
@@ -56,7 +56,7 @@ export default function Home() {
           <div className="section-label">Workouts</div>
           <div className="stack stagger">
             {sorted.map((w) => {
-              const last = sessionsForWorkout(snapshot, w.id)[0]
+              const last = lastSessionForWorkout(snapshot, w.id)
               const meta = [
                 `${w.exerciseIds.length} exercise${w.exerciseIds.length === 1 ? '' : 's'}`,
                 last ? relativeDay(last.date) : 'Never done',

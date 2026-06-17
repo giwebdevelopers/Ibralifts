@@ -9,8 +9,11 @@ export default function History() {
   const navigate = useNavigate()
   const snapshot = useSnapshot()
 
+  // Only finished sessions are history. A workout that was merely opened (and
+  // is still "in progress") must not show up here — otherwise just peeking at a
+  // workout would look like a duplicate logged session.
   const sessions = snapshot.sessions
-    .slice()
+    .filter((s) => s.finishedAt)
     .sort((a, b) => new Date(b.date) - new Date(a.date))
 
   // Group sessions into months (newest first), preserving order.
@@ -61,7 +64,6 @@ export default function History() {
                       <div className="sr-name">{w ? w.name : 'Workout'}</div>
                       <div className="sr-meta">
                         {fmtWeekdayDay(s.date)} · {entries.length} sets · {fmtVolume(vol)} kg
-                        {!s.finishedAt && ' · in progress'}
                       </div>
                     </div>
                     <ChevronRight size={20} style={{ color: 'var(--ink-faint)' }} />
